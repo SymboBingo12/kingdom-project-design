@@ -31,6 +31,11 @@
   --ok: #2f8a5b;
   --warn: #c98400;
   --danger: #b3261e;
+  /* Text-safe versions for small text (4.5 : 1 on page and surface); the fills above stay for dots, bars and icons */
+  --ok-text: #24704a;
+  --warn-text: #8a5a00;
+  --danger-text: #b3261e;
+  --on-danger: #ffffff;
 
   /* Artwork: one duotone palette per topic (dark, mid, light) */
   --duo-navy: #22305a;    --duo-mustard: #d9a93a;  --duo-cream: #f5e6b8;   /* platform, assemblies */
@@ -87,6 +92,7 @@
     --coral: #f08a6c; --seaglass: #1e3a3a;
     --page: #121a2b; --surface: #1a2338; --line: #2a3550; --text: #e8edf6; --text-dim: #9aa6be;
     --ok: #5fc08a; --warn: #f2b544; --danger: #ff6b5e;
+    --ok-text: #5fc08a; --warn-text: #f2b544; --danger-text: #ff6b5e; --on-danger: #121a2b;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 16px 40px -16px rgba(0, 0, 0, 0.6);
   }
 }
@@ -95,14 +101,17 @@
   --coral: #f08a6c; --seaglass: #1e3a3a;
   --page: #121a2b; --surface: #1a2338; --line: #2a3550; --text: #e8edf6; --text-dim: #9aa6be;
   --ok: #5fc08a; --warn: #f2b544; --danger: #ff6b5e;
+  --ok-text: #5fc08a; --warn-text: #f2b544; --danger-text: #ff6b5e; --on-danger: #121a2b;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 16px 40px -16px rgba(0, 0, 0, 0.6);
 }
 
-/* Stage screens are always dark: a white screen glares on stage and over OBS video */
+/* Stage screens are always dark: a white screen glares on stage and over OBS video.
+   Every text colour here reaches 7 : 1 on --page; red stays darker than amber so they differ in brightness too */
 .stage {
   --page: #172036; --surface: #1f2a44; --line: #2c3a5c;
-  --text: #ffffff; --text-dim: #9aa6be; --brand: #8fa9d6;
-  --warn: #f2b544; --danger: #ff6b5e;
+  --text: #ffffff; --text-dim: #b8c2d6; --brand: #8fa9d6;
+  --ok: #5fc08a; --warn: #f2b544; --danger: #ff8a7f;
+  --ok-text: #5fc08a; --warn-text: #f2b544; --danger-text: #ff8a7f; --on-danger: #172036;
 }
 
 /* Artwork helpers */

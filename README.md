@@ -13,12 +13,13 @@ Open these in a browser:
 - [brand/index.html](brand/index.html): the brand guide
 - [brand/desktop.html](brand/desktop.html): desktop screens
 - [brand/slides.html](brand/slides.html): a 5-slide overview
+- [examples/components/index.html](examples/components/index.html): every component, light and dark
 
 ## Use it
 
-1. Link [tokens/tokens.css](tokens/tokens.css). Every colour, size and spacing value lives there.
-2. Follow [guidelines/](guidelines/): principles, accessibility, wording, and what we never copy.
-3. Start from a screen in [examples/](examples/).
+1. Link [tokens/tokens.css](tokens/tokens.css), then [components/index.css](components/index.css).
+2. Build with the `st-` components. See [components/](components/) for the list.
+3. Follow [guidelines/](guidelines/): principles, accessibility, wording, and what we never copy.
 
 ## What's inside
 
@@ -27,7 +28,7 @@ Open these in a browser:
 | `brand/` | The brand pages and the original artwork |
 | `tokens/` | Colours, fonts, sizes and spacing, light and dark |
 | `guidelines/` | The rules every app follows |
-| `components/` | Shared building blocks (coming soon) |
+| `components/` | Buttons, cards, lists, switches, banners, the stage display and more |
 | `motion/` | Animation timing and the reduced-motion rule |
 | `examples/` | Real screens built with the system |
 
