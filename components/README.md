@@ -26,6 +26,7 @@ Every class starts with `st-`, so the components won't clash with an app's own C
 | `progress.css` | `st-progress`, set with `--value` from 0 to 1 |
 | `topbar.css` | `st-topbar`: app name, subtitle, status and time |
 | `stage.css` | `st-stage`: the big countdown, with `data-state` = `run`, `warn`, `over` or `between` |
+| `art.css` | Where art goes: `st-hero`, `st-disc`, `st-empty`, `st-wait`, `st-sheet`; art motion `st-arrive` and `st-rest` (see [motion](../motion/motion.md)) |
 
 ## Rules built in
 

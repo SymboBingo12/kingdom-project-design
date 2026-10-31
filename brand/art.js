@@ -2,6 +2,8 @@
 
 // Original duotone artwork for Steward, drawn in code. Each function returns an SVG string.
 // Shared by every page: <script src="art.js"></script>
+// One layer in each artwork carries a motion hook (art-breathe, art-sway or art-drift). It only moves inside
+// .st-rest, on welcome and empty screens (see components/art.css and motion/motion.md).
 
 const halftone = (id, color, from, to) => `
   <defs>
@@ -29,7 +31,7 @@ function platformArt({ dark = '#22305a', mid = '#d9a93a', light = '#f5e6b8', w =
   return `<svg class="art" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     ${halftone(id, dark, ['0', '0'], ['0.6', '0.8'])}
     <rect width="${w}" height="${h}" fill="${mid}"/>
-    <g fill="none" stroke="${light}" stroke-opacity=".45" stroke-width="2">
+    <g class="art-breathe" fill="none" stroke="${light}" stroke-opacity=".45" stroke-width="2">
       <circle cx="${cx}" cy="${cy}" r="300"/><circle cx="${cx}" cy="${cy}" r="360"/><circle cx="${cx}" cy="${cy}" r="430"/>
     </g>
     <circle cx="${cx}" cy="${cy}" r="235" fill="${light}"/>
@@ -62,7 +64,7 @@ function clockArt({ dark = '#164e57', mid = '#7a2b3a', light = '#a9d6d9', id = '
     ${halftone(id, dark, ['1', '0'], ['0.3', '0.7'])}
     <rect width="400" height="400" fill="${light}"/>
     <rect width="400" height="400" fill="url(#${id}-dots)" mask="url(#${id}-m)" opacity=".4"/>
-    <g fill="none" stroke="${dark}" stroke-opacity=".3" stroke-width="2"><circle cx="200" cy="200" r="150"/><circle cx="200" cy="200" r="172"/></g>
+    <g class="art-breathe" fill="none" stroke="${dark}" stroke-opacity=".3" stroke-width="2"><circle cx="200" cy="200" r="150"/><circle cx="200" cy="200" r="172"/></g>
     <path d="M0 400 L0 250 A190 190 0 0 1 150 400 Z" fill="${mid}" opacity=".85"/>
     <circle cx="200" cy="200" r="128" fill="#fff" fill-opacity=".55" stroke="${dark}" stroke-width="12"/>
     ${ticks}
@@ -81,7 +83,7 @@ function bookArt({ dark = '#4f2346', mid = '#b8657f', light = '#f3d9d3', id = 'b
     <path d="M120 300 L120 120 A80 80 0 0 1 280 120 L280 300 Z" fill="${mid}" opacity=".55"/>
     <path d="M150 300 L150 135 A50 50 0 0 1 250 135 L250 300 Z" fill="${light}" opacity=".6"/>
     <rect width="400" height="400" fill="url(#${id}-dots)" mask="url(#${id}-m)" opacity=".35"/>
-    <g fill="none" stroke="${dark}" stroke-opacity=".55" stroke-width="5" stroke-linecap="round">
+    <g class="art-drift" fill="none" stroke="${dark}" stroke-opacity=".55" stroke-width="5" stroke-linecap="round">
       <path d="M188 238 C170 205 205 185 188 150 C176 126 196 108 190 84"/>
       <path d="M214 238 C232 210 200 190 220 160 C234 138 214 120 222 96"/>
     </g>
@@ -101,7 +103,7 @@ function soundArt({ dark = '#4a1410', mid = '#d2502f', light = '#f7c9b0', id = '
     <rect width="400" height="400" fill="${mid}"/>
     <circle cx="300" cy="230" r="150" fill="${light}" opacity=".9"/>
     <rect width="400" height="400" fill="url(#${id}-dots)" mask="url(#${id}-m)" opacity=".35"/>
-    <g fill="none" stroke="${dark}" stroke-width="7" stroke-linecap="round">
+    <g class="art-breathe art-breathe--left" fill="none" stroke="${dark}" stroke-width="7" stroke-linecap="round">
       <path d="M250 120 A90 90 0 0 1 250 250" stroke-opacity=".75"/>
       <path d="M285 92 A130 130 0 0 1 285 278" stroke-opacity=".5"/>
       <path d="M320 64 A170 170 0 0 1 320 306" stroke-opacity=".3"/>
@@ -124,8 +126,10 @@ function streetArt({ dark = '#2f4a3a', mid = '#8aa26a', light = '#ecebd2', id = 
   return `<svg class="art" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     ${halftone(id, dark, ['0', '0'], ['0.5', '0.6'])}
     <rect width="400" height="400" fill="${light}"/>
-    <circle cx="282" cy="132" r="92" fill="${mid}" opacity=".85"/>
-    <g fill="none" stroke="${mid}" stroke-opacity=".5" stroke-width="2"><circle cx="282" cy="132" r="118"/><circle cx="282" cy="132" r="146"/></g>
+    <g class="art-breathe">
+      <circle cx="282" cy="132" r="92" fill="${mid}" opacity=".85"/>
+      <g fill="none" stroke="${mid}" stroke-opacity=".5" stroke-width="2"><circle cx="282" cy="132" r="118"/><circle cx="282" cy="132" r="146"/></g>
+    </g>
     <rect width="400" height="400" fill="url(#${id}-dots)" mask="url(#${id}-m)" opacity=".3"/>
     ${house(20, 300, 90, 70, 44)}${house(120, 300, 70, 96, 36)}${house(204, 300, 104, 62, 50)}${house(318, 300, 72, 84, 34)}
     <g fill="${dark}"><circle cx="196" cy="236" r="20"/><rect x="193" y="250" width="6" height="50"/></g>
@@ -147,7 +151,7 @@ function hallArt({ dark = '#2d3e50', mid = '#6fa3c7', light = '#dcecf5', id = 'h
     <rect x="96" y="178" width="208" height="122" fill="${dark}"/>
     ${windows}
     <rect x="186" y="262" width="28" height="38" fill="${mid}"/>
-    <g fill="${dark}" opacity=".9"><circle cx="58" cy="226" r="34"/><circle cx="40" cy="250" r="24"/><rect x="54" y="246" width="8" height="54"/></g>
+    <g class="art-sway" fill="${dark}" opacity=".9"><circle cx="58" cy="226" r="34"/><circle cx="40" cy="250" r="24"/><rect x="54" y="246" width="8" height="54"/></g>
     <rect x="0" y="298" width="400" height="102" fill="${mid}"/>
     <rect x="0" y="298" width="400" height="5" fill="${dark}" opacity=".6"/>
   </svg>`;

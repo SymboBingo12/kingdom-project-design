@@ -1,7 +1,8 @@
 /* Artwork components: where Steward's art lives in an app. Art goes at the edges of a task (welcome, empty, waiting,
    done), never behind numbers someone must read fast, never on a stage screen during a talk.
    Fill each art box with a function from brand/art.js, each with a unique id:
-   el.innerHTML = clockArt({ id: 'home1' }); */
+   el.innerHTML = clockArt({ id: 'home1' });
+   Art moves at four moments only: arrive, wait, celebrate, rest (see motion/motion.md). */
 
 /* Art disc: artwork in a circle with the paper grain. Sizes: sm 46 px (row thumbnail), md 132 px, lg 170 px */
 .st-disc { display: block; flex: none; width: 132px; aspect-ratio: 1; border-radius: 50%; overflow: hidden; }
@@ -49,12 +50,38 @@
 .st-sheet.is-open { transform: none; transition-duration: .4s; }
 .st-sheet__art { position: relative; width: 132px; height: 132px; margin: -66px auto 0; }
 .st-sheet__art .st-disc { width: 100%; box-shadow: 0 0 0 6px var(--page); }
-.st-sheet__art i { position: absolute; width: 13px; height: 13px; border-radius: 50%; transform: scale(0); }
-.st-sheet.is-open .st-sheet__art i { animation: st-pop .45s var(--ease-pop) forwards; }
-.st-sheet.is-open .st-sheet__art i:nth-of-type(2) { animation-delay: .06s; } .st-sheet.is-open .st-sheet__art i:nth-of-type(3) { animation-delay: .12s; }
-.st-sheet.is-open .st-sheet__art i:nth-of-type(4) { animation-delay: .18s; } .st-sheet.is-open .st-sheet__art i:nth-of-type(5) { animation-delay: .24s; }
-@keyframes st-pop { to { transform: scale(1); } }
+.st-sheet__art i { position: absolute; width: 13px; height: 13px; border-radius: 50%; opacity: 0; transform: scale(.3); }
+/* Celebrate: the art gives one small bounce as the sheet lands, then the dots pop around it */
+.st-sheet.is-open .st-sheet__art .st-disc { animation: st-bump .5s var(--ease-pop) .12s both; }
+@keyframes st-bump { from { transform: scale(.9); } }
+.st-sheet.is-open .st-sheet__art i { animation: st-pop .45s var(--ease-pop) .2s forwards; }
+.st-sheet.is-open .st-sheet__art i:nth-of-type(2) { animation-delay: .26s; } .st-sheet.is-open .st-sheet__art i:nth-of-type(3) { animation-delay: .32s; }
+.st-sheet.is-open .st-sheet__art i:nth-of-type(4) { animation-delay: .38s; } .st-sheet.is-open .st-sheet__art i:nth-of-type(5) { animation-delay: .44s; }
+@keyframes st-pop { to { opacity: 1; transform: scale(1); } }
 .st-sheet h3 { margin: var(--space-3) 0 0; color: var(--coral); font-size: var(--text-xl); }
 .st-sheet p { margin: 0; color: var(--text-dim); }
 .st-sheet p b { color: var(--text); font-size: var(--text-lg); }
 .st-sheet .st-btn { margin-top: var(--space-5); }
+
+/* Arrive: when a screen opens, its art fades in and rises a little, once. Add .st-arrive to a hero, disc or
+   empty-state art box. Stagger a few with style="--arrive-delay: 60ms" (keep steps between 30 and 80 ms) */
+.st-arrive { animation: st-arrive .3s var(--ease-out) var(--arrive-delay, 0s) both; }
+@keyframes st-arrive { from { opacity: 0; transform: translateY(8px); } }
+
+/* Rest: on welcome and empty screens only, one layer of the art moves very slowly, like light shifting on
+   paper. Add .st-rest to the art box; brand/art.js marks the layer. Never in lists, on working screens or on stage */
+.st-rest .art-breathe, .st-rest .art-sway, .st-rest .art-drift { transform-box: fill-box; transform-origin: center; }
+.st-rest .art-breathe { animation: st-breathe 9s ease-in-out infinite alternate; }
+.st-rest .art-breathe--left { transform-origin: 0 50%; }
+.st-rest .art-sway { transform-origin: 50% 100%; transform: rotate(-1.2deg); animation: st-sway 7s ease-in-out infinite alternate; }
+.st-rest .art-drift { animation: st-drift 6s ease-in-out infinite alternate; }
+@keyframes st-breathe { to { transform: scale(1.04); } }
+@keyframes st-sway { to { transform: rotate(1.2deg); } }
+@keyframes st-drift { to { opacity: .55; transform: translateY(-8px); } }
+
+/* Reduced motion: arrive becomes a plain fade; resting art stands still */
+@keyframes st-fade { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .st-arrive.st-arrive { animation: st-fade .2s ease-out var(--arrive-delay, 0s) both !important; }
+  .st-rest .art-breathe, .st-rest .art-sway, .st-rest .art-drift { animation: none; transform: none; }
+}
