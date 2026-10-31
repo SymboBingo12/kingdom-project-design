@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Steward Brand Slides</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="screens.css">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { background: #e6e9ef; color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; overflow: hidden; }
+  button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+  :focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; border-radius: 6px; }
+  svg.art { display: block; width: 100%; height: 100%; }
+
+  /* Every slide is designed at 1280 × 720 and scaled to fit the window */
+  .viewport { position: fixed; inset: 0 0 64px; display: grid; place-items: center; }
+  .deck { width: 1280px; height: 720px; position: relative; transform-origin: center; }
+  .slide { position: absolute; inset: 0; background: #fff; overflow: hidden; box-shadow: 0 30px 80px -30px rgba(31,42,68,.45); opacity: 0; visibility: hidden; transition: opacity .35s var(--ease-out), visibility 0s .35s; }
+  .slide.on { opacity: 1; visibility: visible; transition: opacity .35s var(--ease-out); }
+  .rings { position: absolute; pointer-events: none; color: #e7ebf2; }
+  .foot { position: absolute; left: 64px; right: 64px; bottom: 28px; display: flex; justify-content: space-between; font-size: 13px; color: var(--text-dim); }
+  .foot b { color: var(--duo-deepteal); font-weight: 800; letter-spacing: -0.02em; font-size: 15px; }
+  h2.title { position: absolute; left: 64px; top: 52px; margin: 0; color: var(--coral); font-size: 44px; line-height: 1.1; font-weight: 700; letter-spacing: -0.01em; }
+  p.sub { position: absolute; left: 64px; top: 112px; margin: 0; color: var(--text-dim); font-size: 19px; max-width: 760px; line-height: 1.5; }
+
+  /* Controls */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; height: 64px; display: flex; align-items: center; justify-content: center; gap: 16px; }
+  .bar button { width: 44px; height: 44px; border-radius: 50%; background: #fff; box-shadow: 0 2px 8px rgba(31,42,68,.15); display: grid; place-items: center; }
+  .bar button svg { width: 20px; height: 20px; }
+  .bar span { font-size: 14px; color: var(--text-dim); min-width: 60px; text-align: center; font-variant-numeric: tabular-nums; }
+  .bar .print { width: auto; border-radius: 99px; padding: 0 18px; font-size: 14px; font-weight: 600; }
+
+  /* ---------- 1. Cover ---------- */
+  .s1 .mast { position: absolute; left: 64px; top: 48px; }
+  .s1 .mast b { display: block; font-size: 64px; font-weight: 800; letter-spacing: -0.035em; color: var(--duo-deepteal); line-height: 1; }
+  .s1 .mast small { display: block; margin-top: 8px; font-size: 16px; color: var(--text-dim); }
+  .s1 .block { position: absolute; left: 64px; top: 250px; width: 420px; background: var(--coral-bright); color: #fff; padding: 36px 36px 40px; }
+  .s1 .block span { display: block; text-transform: uppercase; letter-spacing: .18em; font-size: 30px; line-height: 1.32; font-weight: 300; }
+  .s1 .block span.b { font-weight: 800; }
+  .s1 .block p { margin: 22px 0 0; font-size: 16px; line-height: 1.5; opacity: .92; letter-spacing: 0; text-transform: none; }
+  .s1 .c { position: absolute; }
+  .s1 .c > div { width: 100%; height: 100%; }
+  .s1 .c.ring > div { box-shadow: 0 0 0 10px #fff; }
+
+  /* ---------- 2. One topic, one palette ---------- */
+  .areas { position: absolute; left: 64px; right: 64px; top: 196px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 22px; }
+  .area .disc { width: 152px; height: 152px; margin: 0 auto 16px; }
+  .area h3 { margin: 0 0 6px; font-size: 18px; line-height: 1.25; text-align: center; }
+  .area .dots { display: flex; justify-content: center; margin-bottom: 12px; }
+  .area .dots i { width: 22px; height: 22px; border-radius: 50%; margin-left: -6px; box-shadow: 0 0 0 2px #fff; }
+  .area .dots i:first-child { margin-left: 0; }
+  .area ul { margin: 0; padding: 0; list-style: none; text-align: center; font-size: 14px; color: var(--text-dim); line-height: 1.6; }
+
+  /* ---------- 3. The look ---------- */
+  .s3 .cols { position: absolute; left: 64px; right: 64px; top: 190px; bottom: 80px; display: grid; grid-template-columns: 1fr 300px 1fr; gap: 48px; }
+  .s3 h4 { margin: 0 0 12px; font-size: 14px; color: var(--text-dim); font-weight: 500; }
+  .swatches { display: flex; align-items: flex-end; gap: 14px; margin-bottom: 30px; }
+  .swatches div { text-align: center; font-size: 12px; color: var(--text-dim); }
+  .swatches i { display: block; border-radius: 50%; margin: 0 auto 6px; box-shadow: inset 0 0 0 1px rgba(31,42,68,.1); }
+  .swatches b { display: block; color: var(--text); font-size: 13px; }
+  .typo .t1 { color: var(--coral); font-size: 34px; font-weight: 700; line-height: 1.1; }
+  .typo .t2 { font-size: 20px; font-weight: 600; margin: 10px 0 6px; }
+  .typo .t3 { font-size: 15px; color: var(--text-dim); line-height: 1.55; margin: 0; }
+  .typo .t3 .ref { color: var(--coral); font-weight: 700; }
+  .typo .t4 { font-size: 13px; color: var(--text-dim); margin-top: 14px; }
+  .phone { border-radius: 34px; padding: 9px; background: #fff; box-shadow: 0 1px 2px rgba(31,42,68,.06), 0 18px 44px -16px rgba(31,42,68,.35), 0 0 0 1px var(--line); height: 100%; }
+  .app { border-radius: 26px; overflow: hidden; height: 100%; display: flex; flex-direction: column; background: #fff; }
+  .app .hero { position: relative; height: 150px; flex: none; }
+  .app .hero .banner { position: absolute; inset: 0 0 24px; -webkit-mask-image: linear-gradient(#000 55%, transparent); mask-image: linear-gradient(#000 55%, transparent); }
+  .app .hero .t { position: absolute; left: 18px; bottom: 2px; }
+  .app .hero small { display: block; color: var(--text-dim); font-size: 12px; }
+  .app .hero b { color: var(--coral); font-size: 21px; line-height: 1.15; }
+  .slots { padding: 12px 14px; display: grid; gap: 8px; }
+  .slot { background: var(--surface); border-radius: 12px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; }
+  .slot div { flex: 1; } .slot b { display: block; font-size: 14px; } .slot small { color: var(--text-dim); font-size: 12px; }
+  .slot .spots { display: flex; gap: 4px; }
+  .slot .spots i { width: 10px; height: 10px; border-radius: 50%; background: var(--duo-mustard); }
+  .slot .spots i.free { background: transparent; box-shadow: inset 0 0 0 1.5px var(--text-dim); }
+  .app .go { margin: auto 14px 14px; height: 48px; border-radius: 99px; background: var(--brand); color: #fff; font-weight: 700; font-size: 15px; display: grid; place-items: center; }
+  .principles { display: grid; gap: 18px; }
+  .principles div { border-top: 2px solid var(--coral); padding-top: 8px; }
+  .principles b { display: block; font-size: 17px; }
+  .principles span { font-size: 14px; color: var(--text-dim); line-height: 1.5; }
+
+  /* ---------- 4. On a big screen: real desktop screens (screens.css), shrunk to fit ---------- */
+  .num { font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .desk { position: absolute; left: 64px; right: 64px; top: 190px; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .desk figure { margin: 0; }
+  .desk .frame { width: 560px; height: 371px; overflow: hidden; border-radius: 12px; box-shadow: 0 1px 2px rgba(31,42,68,.06), 0 18px 44px -16px rgba(31,42,68,.35), 0 0 0 1px var(--line); }
+  .desk .window { width: 1000px; min-width: 0; height: 662px; transform: scale(.56); transform-origin: top left; border-radius: 0; }
+  .desk .ctl aside .foot2 { margin-top: auto; padding: var(--space-4) var(--space-5); border-top: 1px solid var(--line); display: flex; gap: var(--space-2); }
+  .desk .adjust span { flex: 1; height: 40px; border-radius: var(--radius-sm); background: var(--surface); font-weight: 700; font-size: 14px; display: grid; place-items: center; }
+  .desk figcaption { margin-top: 14px; font-size: 14px; color: var(--text-dim); }
+  .desk figcaption b { display: block; color: var(--text); font-size: 16px; }
+
+  /* ---------- 5. Rules ---------- */
+  .s5 .cols { position: absolute; left: 64px; top: 190px; width: 780px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .s5 .card { background: var(--surface); border-radius: 16px; padding: 22px 26px; }
+  .s5 .card b { display: block; font-size: 18px; margin-bottom: 10px; }
+  .s5 .card ul { margin: 0; padding-left: 18px; color: var(--text-dim); font-size: 15px; line-height: 1.75; }
+  .s5 .card.wide { grid-column: span 2; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .s5 .card.wide div b { font-size: 16px; margin-bottom: 4px; }
+  .s5 .card.wide div span { font-size: 14px; color: var(--text-dim); line-height: 1.5; }
+  .s5 .art1 { position: absolute; right: -60px; top: 120px; width: 420px; height: 420px; }
+  .s5 .art2 { position: absolute; right: 262px; top: 490px; width: 150px; height: 150px; }
+  .s5 .art2 > div, .s5 .art1 > div { width: 100%; height: 100%; }
+  .s5 .art2 > div { box-shadow: 0 0 0 10px #fff; }
+  .s5 .note { position: absolute; left: 64px; bottom: 64px; width: 780px; font-size: 12px; color: var(--text-dim); line-height: 1.5; }
+
+  @media (prefers-reduced-motion: reduce) { .slide { transition: none !important; } }
+
+  /* Print / Save as PDF: one slide per page */
+  @page { size: 1280px 720px; margin: 0; }
+  @media print {
+    body { background: #fff; overflow: visible; }
+    .bar { display: none; }
+    .viewport { position: static; display: block; }
+    .deck { transform: none !important; width: 1280px; height: auto; }
+    .slide { position: relative; opacity: 1; visibility: visible; box-shadow: none; width: 1280px; height: 720px; page-break-after: always; break-after: page; }
+    .art-grain::after { display: none; } /* the grain turns into heavy images in a PDF; the halftone dots stay */
+  }
+</style>
+</head>
+<body>
+  <div class="viewport">
+    <div class="deck" id="deck">
+
+      <!-- 1 -->
+      <section class="slide s1 on" aria-label="Slide 1 of 5: cover">
+        <svg class="rings" style="width:1100px;height:1100px;left:420px;top:-260px" viewBox="0 0 1100 1100" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="550" cy="550" r="540"/><circle cx="550" cy="550" r="420"/></g></svg>
+        <div class="mast"><b>Steward</b><small>A brand for Kingdom projects</small></div>
+        <div class="block">
+          <span>One look</span><span>for every</span><span class="b">Kingdom</span><span class="b">project</span>
+          <p>Apps and tools for meetings, the ministry, the Kingdom Hall and personal study, made to feel like they belong together.</p>
+        </div>
+        <div class="c art-circle art-grain" style="left:560px;top:96px;width:330px;height:330px"><div id="c1"></div></div>
+        <div class="c ring art-circle art-grain" style="left:850px;top:60px;width:230px;height:230px"><div id="c2"></div></div>
+        <div class="c ring art-circle art-grain" style="left:830px;top:300px;width:290px;height:290px"><div id="c3"></div></div>
+        <div class="c ring art-circle art-grain" style="left:640px;top:410px;width:200px;height:200px"><div id="c4"></div></div>
+        <div class="c art-circle art-grain" style="left:1090px;top:200px;width:130px;height:130px"><div id="c5"></div></div>
+        <div class="c ring art-circle art-grain" style="left:540px;top:560px;width:120px;height:120px"><div id="c6"></div></div>
+        <div class="foot"><span>Brand guidelines, draft 0.3</span><span>1 / 5</span></div>
+      </section>
+
+      <!-- 2 -->
+      <section class="slide s2" aria-label="Slide 2 of 5: one topic, one palette">
+        <h2 class="title">One topic, one palette</h2>
+        <p class="sub">Every area of Kingdom work gets its own duotone colours and artwork, so people recognise a tool before they read its name.</p>
+        <div class="areas">
+          <div class="area"><div class="disc art-circle art-grain" id="t1"></div><h3>Meetings and assemblies</h3><div class="dots"><i style="background:#22305a"></i><i style="background:#d9a93a"></i><i style="background:#f5e6b8"></i></div><ul><li>Stage timer</li><li>Attendance</li><li>Assembly helpers</li></ul></div>
+          <div class="area"><div class="disc art-circle art-grain" id="t2"></div><h3>Schedules and time</h3><div class="dots"><i style="background:#164e57"></i><i style="background:#7a2b3a"></i><i style="background:#a9d6d9"></i></div><ul><li>Meeting parts</li><li>Duty rosters</li><li>Reminders</li></ul></div>
+          <div class="area"><div class="disc art-circle art-grain" id="t3"></div><h3>The ministry</h3><div class="dots"><i style="background:#2f4a3a"></i><i style="background:#8aa26a"></i><i style="background:#ecebd2"></i></div><ul><li>Cart schedules</li><li>Group arrangements</li><li>Territory helpers</li></ul></div>
+          <div class="area"><div class="disc art-circle art-grain" id="t4"></div><h3>Kingdom Hall care</h3><div class="dots"><i style="background:#2d3e50"></i><i style="background:#6fa3c7"></i><i style="background:#dcecf5"></i></div><ul><li>Cleaning rotas</li><li>Maintenance checklists</li><li>Supplies</li></ul></div>
+          <div class="area"><div class="disc art-circle art-grain" id="t5"></div><h3>Study and reading</h3><div class="dots"><i style="background:#4f2346"></i><i style="background:#b8657f"></i><i style="background:#f3d9d3"></i></div><ul><li>Reading plans</li><li>Study trackers</li><li>Family worship</li></ul></div>
+          <div class="area"><div class="disc art-circle art-grain" id="t6"></div><h3>Sound and media</h3><div class="dots"><i style="background:#4a1410"></i><i style="background:#d2502f"></i><i style="background:#f7c9b0"></i></div><ul><li>OBS and video</li><li>Sound desk checks</li><li>Zoom helpers</li></ul></div>
+        </div>
+        <div class="foot"><b>Steward</b><span>2 / 5</span></div>
+      </section>
+
+      <!-- 3 -->
+      <section class="slide s3" aria-label="Slide 3 of 5: the look">
+        <h2 class="title">The look, in any project</h2>
+        <p class="sub">White space, art in circles and fades, coral headings and one calm blue for anything you tap. Here it is on a ministry tool.</p>
+        <div class="cols">
+          <div>
+            <h4>Core colours</h4>
+            <div class="swatches">
+              <div><i style="width:70px;height:70px;background:#1f2a44"></i><b>Ink</b>Text</div>
+              <div><i style="width:62px;height:62px;background:#c9502f"></i><b>Coral</b>Headings</div>
+              <div><i style="width:56px;height:56px;background:#4a6da7"></i><b>Blue</b>Buttons</div>
+              <div><i style="width:48px;height:48px;background:#d3ebe3"></i><b>Sea glass</b>Behind art</div>
+              <div><i style="width:42px;height:42px;background:#fff"></i><b>Paper</b>Pages</div>
+            </div>
+            <h4>Type: Noto Sans, one family</h4>
+            <div class="typo">
+              <div class="t1">Saturday cart witnessing</div>
+              <div class="t2">Plaza, 9:00 to 11:00</div>
+              <p class="t3">Three spots, two filled. Bring the cart from the Kingdom Hall and return it by noon. <span class="ref">Read Acts 20:20.</span></p>
+              <div class="t4">Covers nearly every language a congregation might use.</div>
+            </div>
+          </div>
+          <div class="phone"><div class="app">
+            <div class="hero"><div class="banner art-grain" id="p1"></div><div class="t"><small>This week</small><b>Cart schedule</b></div></div>
+            <div class="slots">
+              <div class="slot"><div><b>Saturday, 9:00</b><small>Plaza</small></div><span class="spots"><i></i><i></i><i class="free"></i></span></div>
+              <div class="slot"><div><b>Saturday, 14:00</b><small>Market street</small></div><span class="spots"><i></i><i class="free"></i><i class="free"></i></span></div>
+              <div class="slot"><div><b>Monday, 8:00</b><small>Train station</small></div><span class="spots"><i></i><i></i><i></i></span></div>
+            </div>
+            <div class="go">Sign up for a spot</div>
+          </div></div>
+          <div class="principles">
+            <div><b>Art lives in circles</b><span>Different sizes, sometimes overlapping, with a sea-glass circle behind.</span></div>
+            <div><b>Edges fade into white</b><span>Banners dissolve into the page instead of ending in a hard line.</span></div>
+            <div><b>Coral leads the eye</b><span>Titles and references in coral; everything else stays dark and quiet.</span></div>
+            <div><b>White space is content</b><span>Nothing crowded, even on a small phone.</span></div>
+          </div>
+        </div>
+        <div class="foot"><b>Steward</b><span>3 / 5</span></div>
+      </section>
+
+      <!-- 4 -->
+      <section class="slide s4" aria-label="Slide 4 of 5: on a big screen">
+        <svg class="rings" style="width:900px;height:900px;left:-380px;top:120px" viewBox="0 0 900 900" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="450" cy="450" r="440"/><circle cx="450" cy="450" r="330"/></g></svg>
+        <h2 class="title">On a big screen</h2>
+        <p class="sub">The same family on a laptop at the sound desk. More room means seeing more at once, with one banner of art per screen.</p>
+        <div class="desk">
+          <figure>
+            <div class="frame"><div class="window">
+              <div class="chrome"><div class="dots"><i></i><i></i><i></i></div><div class="url">stage.local/control</div><div class="spacer"></div></div>
+              <div class="ctl">
+                <aside>
+                  <div class="side-hero"><div class="banner art-grain" id="w1"></div><div class="t"><small>Saturday, October 31</small><b>Weekend meeting</b></div></div>
+                  <div class="parts">
+                    <div class="partrow done"><svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Opening song and prayer</span><em>5:00</em></div>
+                    <div class="partrow cur"><i class="dot"></i><span>Public Talk</span><em>30:00</em></div>
+                    <div class="partrow"><i class="dot"></i><span>Watchtower Study</span><em>1:00:00</em></div>
+                    <div class="partrow"><i class="dot"></i><span>Concluding song</span><em>5:00</em></div>
+                  </div>
+                  <div class="foot2"><span class="btn ghost">Report</span><span class="btn ghost">Refresh</span></div>
+                </aside>
+                <main>
+                  <div class="now-part"><small>Now</small><h3>Public Talk</h3></div>
+                  <div class="big num">18:34</div>
+                  <div class="meta">left of 30 minutes. Started at 10:05.</div>
+                  <div class="prog"><i style="width:38%"></i></div>
+                  <div class="actions"><span class="btn danger main-btn">Stop</span><span class="btn ghost">Pause</span><span class="btn ghost">Reset</span></div>
+                  <div class="adjust"><span>−1:00</span><span>−0:30</span><span>+0:30</span><span>+1:00</span></div>
+                </main>
+                <div class="right">
+                  <div><h4>The speaker sees</h4><div class="preview stage"><small>Public Talk</small><b>18:34</b></div></div>
+                  <div><h4>Current time</h4><div class="clockcard"><div class="face art-circle art-grain" id="w2"></div><div><b>10:16</b><small>Meeting ends around 11:45</small></div></div></div>
+                  <div><h4>Connected</h4><div class="status">
+                    <div>OBS <span class="pill ok">Connected</span></div>
+                    <div>Phones <span class="pill ok">2 connected</span></div>
+                  </div></div>
+                </div>
+              </div>
+            </div></div>
+            <figcaption><b>Stage Timer at the sound desk</b>Plan on the left, act in the middle, check on the right.</figcaption>
+          </figure>
+          <figure>
+            <div class="frame"><div class="window">
+              <div class="chrome"><div class="dots"><i></i><i></i><i></i></div><div class="url">attendance.local/history</div><div class="spacer"></div></div>
+              <div class="att">
+                <div class="hero"><div class="banner art-grain" id="w3"></div><div class="t"><h3>Attendance</h3><small>The last 12 meetings</small></div></div>
+                <div class="body">
+                  <div>
+                    <div class="tiles">
+                      <div class="card tile"><small>Last meeting</small><b class="num">128</b><span>Thursday, October 29</span></div>
+                      <div class="card tile"><small>Average</small><b class="num">138</b><span>Across 12 meetings</span></div>
+                      <div class="card tile"><small>Highest</small><b class="num">152</b><span>Sunday, October 25</span></div>
+                    </div>
+                    <div class="card"><h3>Present at each meeting</h3><div class="chart" id="wchart"></div></div>
+                  </div>
+                  <div class="card side-card">
+                    <div class="disc art-circle art-grain" id="w4"></div>
+                    <h3>Weekend meeting</h3>
+                    <p>Starts in 2 hours. Ready when you are.</p>
+                    <span class="btn primary">Count now</span>
+                  </div>
+                </div>
+              </div>
+            </div></div>
+            <figcaption><b>Attendance on a laptop</b>Numbers first, then the chart; the art leads to the next count.</figcaption>
+          </figure>
+        </div>
+        <div class="foot"><b>Steward</b><span>4 / 5</span></div>
+      </section>
+
+      <!-- 5 -->
+      <section class="slide s5" aria-label="Slide 5 of 5: the rules we keep">
+        <h2 class="title">The rules we keep</h2>
+        <p class="sub">Art makes the tools warm and memorable. These rules keep it from getting in the way.</p>
+        <div class="cols">
+          <div class="card"><b>Art goes here</b><ul>
+            <li>Welcome and first-time setup</li><li>Headers that fade into the page</li><li>Empty screens, waiting and "done"</li><li>Small circles that tell tools apart</li>
+          </ul></div>
+          <div class="card"><b>Art stays out</b><ul>
+            <li>Behind numbers or buttons read fast</li><li>On stage while someone is speaking</li><li>In error messages</li><li>More than one large piece per screen</li>
+          </ul></div>
+          <div class="card wide">
+            <div><b>For everyone</b><span>Big text and buttons, strong contrast, never colour alone.</span></div>
+            <div><b>Plain words</b><span>Short sentences, and always the next step.</span></div>
+            <div><b>Our own work</b><span>Original artwork only. No logos, names or art from the organization.</span></div>
+          </div>
+        </div>
+        <div class="art1 art-circle art-grain"><div id="r1"></div></div>
+        <div class="art2 art-circle art-grain"><div id="r2"></div></div>
+        <p class="note">Steward is a working name. These tools are independent and are not affiliated with, endorsed by, or connected to Jehovah's Witnesses, JW.ORG, JW Library or the Watch Tower Bible and Tract Society.</p>
+        <div class="foot"><b>Steward</b><span>5 / 5</span></div>
+      </section>
+
+    </div>
+  </div>
+
+  <div class="bar">
+    <button id="prev" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m15 6-6 6 6 6"/></svg></button>
+    <span id="count">1 / 5</span>
+    <button id="next" aria-label="Next slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></button>
+    <button class="print" id="print">Save as PDF</button>
+  </div>
+
+<script src="art.js"></script>
+<script>
+  const $ = (id) => document.getElementById(id);
+
+  // Artwork
+  $('c1').innerHTML = platformArt({ w: 620, h: 620, cx: 310, id: 'c1' });
+  $('c2').innerHTML = clockArt({ id: 'c2' });
+  $('c3').innerHTML = streetArt({ id: 'c3' });
+  $('c4').innerHTML = hallArt({ id: 'c4' });
+  $('c5').innerHTML = bookArt({ id: 'c5' });
+  $('c6').innerHTML = soundArt({ id: 'c6' });
+  $('t1').innerHTML = platformArt({ w: 620, h: 620, cx: 310, id: 't1' });
+  $('t2').innerHTML = clockArt({ id: 't2' });
+  $('t3').innerHTML = streetArt({ id: 't3' });
+  $('t4').innerHTML = hallArt({ id: 't4' });
+  $('t5').innerHTML = bookArt({ id: 't5' });
+  $('t6').innerHTML = soundArt({ id: 't6' });
+  $('p1').innerHTML = streetArt({ id: 'p1' });
+  $('r1').innerHTML = hallArt({ id: 'r1' });
+  $('r2').innerHTML = streetArt({ id: 'r2' });
+  $('w1').innerHTML = platformArt({ w: 640, h: 330, cx: 420, id: 'w1' });
+  $('w2').innerHTML = clockArt({ id: 'w2' });
+  $('w3').innerHTML = platformArt({ w: 1600, h: 460, cx: 1180, id: 'w3' });
+  $('w4').innerHTML = platformArt({ w: 620, h: 620, cx: 310, id: 'w4' });
+
+  // A still version of the attendance chart (the desktop page has the interactive one)
+  (function chart() {
+    const v = [146, 126, 148, 129, 150, 124, 145, 131, 147, 127, 152, 128];
+    const W = 640, H = 200, l = 34, b = 18, t = 18, max = 160, ih = H - t - b, step = (W - l - 8) / v.length, bw = 24;
+    const y = (n) => t + ih - (n / max) * ih;
+    let s = `<svg viewBox="0 0 ${W} ${H}" aria-hidden="true"><g class="grid">${[0, 50, 100, 150].map((n) => `<line x1="${l}" x2="${W - 8}" y1="${y(n)}" y2="${y(n)}"/>`).join('')}</g>`;
+    s += `<g class="axis">${[0, 50, 100, 150].map((n) => `<text x="${l - 8}" y="${y(n) + 4}" text-anchor="end">${n}</text>`).join('')}</g>`;
+    v.forEach((n, i) => {
+      const x = l + step * i + (step - bw) / 2, top = y(n), r = 4;
+      s += `<path class="bar" d="M${x} ${t + ih} V${top + r} Q${x} ${top} ${x + r} ${top} H${x + bw - r} Q${x + bw} ${top} ${x + bw} ${top + r} V${t + ih} Z"/>`;
+    });
+    $('wchart').innerHTML = s + '</svg>';
+  })();
+
+  // Fit the 1280 × 720 deck to the window
+  const deck = $('deck');
+  function fit() {
+    const k = Math.min(innerWidth / 1280, (innerHeight - 64) / 720) * 0.94;
+    deck.style.transform = `scale(${k})`;
+  }
+  addEventListener('resize', fit); fit();
+
+  // Navigation: arrows, space, buttons, or a click on the slide
+  const slides = [...document.querySelectorAll('.slide')];
+  let cur = 0;
+  function go(i) {
+    cur = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach((s, n) => { s.classList.toggle('on', n === cur); s.setAttribute('aria-hidden', n !== cur); });
+    $('count').textContent = `${cur + 1} / ${slides.length}`;
+    $('prev').disabled = cur === 0; $('next').disabled = cur === slides.length - 1;
+    history.replaceState(null, '', `#${cur + 1}`);
+  }
+  $('prev').addEventListener('click', () => go(cur - 1));
+  $('next').addEventListener('click', () => go(cur + 1));
+  $('print').addEventListener('click', () => print());
+  addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(cur + 1); }
+    if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); go(cur - 1); }
+    if (e.key === 'Home') go(0);
+    if (e.key === 'End') go(slides.length - 1);
+  });
+  go((parseInt(location.hash.slice(1), 10) || 1) - 1); // slides.html#3 opens slide 3
+</script>
+</body>
+</html>

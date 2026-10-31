@@ -1,0 +1,29 @@
+# Screenshots of other apps used to match colours: copyrighted, keep them on this computer only
+reference/
+
+# PDF exports: made from the pages in brand/, so regenerate instead of storing every version
+*.pdf
+
+# Private working notes for Claude sessions
+CLAUDE.md
+STATUS.md
+CONTEXT.md
+.claude/
+
+# Secrets: never commit these
+.env
+.env.*
+*.key
+*.pem
+*.pfx
+secrets*
+
+# Tools and builds
+node_modules/
+dist/
+*.log
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini

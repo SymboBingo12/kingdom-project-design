@@ -1,0 +1,127 @@
+/* Desktop app screens for Steward: browser window frame, Stage Timer control and app window, Attendance history.
+   Shared by desktop.html and slides.html. Needs ../tokens/tokens.css first. */
+
+/* Browser window */
+.scroller { overflow-x: auto; border-radius: 16px; box-shadow: var(--shadow), 0 0 0 1px var(--line); }
+.window { min-width: 1000px; background: var(--page); border-radius: 16px; overflow: hidden; }
+.chrome { height: 42px; display: flex; align-items: center; gap: var(--space-4); padding: 0 var(--space-4); background: var(--surface); border-bottom: 1px solid var(--line); }
+.chrome .dots { display: flex; gap: 7px; } .chrome .dots i { width: 11px; height: 11px; border-radius: 50%; background: var(--line); }
+.chrome .url { flex: 1; max-width: 420px; margin: 0 auto; height: 26px; border-radius: var(--radius-pill); background: var(--page); border: 1px solid var(--line); font-size: 12px; color: var(--text-dim); display: flex; align-items: center; justify-content: center; }
+.chrome .title { font-size: 12px; color: var(--text-dim); font-weight: var(--weight-medium); }
+.chrome .spacer { width: 50px; }
+
+/* Shared bits */
+.card { background: var(--surface); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); }
+.card h3 { margin: 0 0 var(--space-3); font-size: var(--text-md); }
+.btn { height: var(--tap-min); padding: 0 var(--space-5); border-radius: var(--radius-pill); font-weight: var(--weight-bold); font-size: var(--text-sm); display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); }
+.btn.primary { background: var(--brand); color: var(--on-brand); }
+.btn.ghost { border: 1.5px solid var(--line); background: var(--page); }
+.btn.danger { background: var(--danger); color: #fff; }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: var(--text-xs); font-weight: var(--weight-bold); padding: 4px 10px; border-radius: var(--radius-pill); }
+.pill.ok { background: color-mix(in srgb, var(--ok) 14%, var(--page)); color: var(--ok); }
+.pill svg { width: 13px; height: 13px; }
+.switch { width: 44px; height: 26px; border-radius: 99px; background: var(--line); position: relative; flex: none; }
+.switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform .15s ease-out; box-shadow: 0 1px 3px rgba(0,0,0,.25); }
+.switch[aria-checked="true"] { background: var(--brand); } .switch[aria-checked="true"]::after { transform: translateX(18px); }
+.seg { display: inline-flex; padding: 3px; border-radius: var(--radius-pill); background: var(--page); border: 1px solid var(--line); }
+.seg button { padding: 5px 14px; border-radius: var(--radius-pill); font-size: var(--text-sm); color: var(--text-dim); }
+.seg button[aria-pressed="true"] { background: var(--brand); color: var(--on-brand); }
+.opt { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-3) 0; border-top: 1px solid var(--line); }
+.opt:first-of-type { border-top: 0; }
+.opt small { display: block; color: var(--text-dim); font-size: var(--text-xs); }
+
+/* ---------- 1. Stage Timer control ---------- */
+.ctl { display: grid; grid-template-columns: 290px 1fr 300px; min-height: 620px; }
+.ctl aside { border-right: 1px solid var(--line); display: flex; flex-direction: column; }
+.ctl .side-hero { position: relative; height: 150px; }
+.ctl .side-hero .banner { position: absolute; inset: 0 0 30px; -webkit-mask-image: linear-gradient(#000 50%, transparent); mask-image: linear-gradient(#000 50%, transparent); }
+.ctl .side-hero .t { position: absolute; left: var(--space-5); bottom: 4px; }
+.ctl .side-hero small { color: var(--text-dim); font-size: var(--text-xs); display: block; }
+.ctl .side-hero b { color: var(--coral); font-size: var(--text-lg); }
+.parts { padding: var(--space-4) var(--space-3); display: grid; gap: 2px; }
+.partrow { display: flex; align-items: center; gap: var(--space-3); padding: 9px var(--space-3); border-radius: var(--radius-sm); font-size: var(--text-sm); text-align: left; width: 100%; }
+.partrow span { flex: 1; } .partrow em { font-style: normal; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+.partrow.done { color: var(--text-dim); } .partrow.done em { text-decoration: line-through; }
+.partrow.cur { background: var(--brand-soft); color: var(--brand-strong); font-weight: var(--weight-bold); box-shadow: inset 3px 0 0 var(--brand); }
+.partrow .tick { width: 16px; height: 16px; color: var(--ok); flex: none; }
+.partrow .dot { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--line); flex: none; margin: 0 4px; }
+.partrow.cur .dot { background: var(--brand); border-color: var(--brand); }
+.ctl aside .foot { margin-top: auto; padding: var(--space-4) var(--space-5); border-top: 1px solid var(--line); display: flex; gap: var(--space-2); }
+.ctl main { padding: var(--space-6) var(--space-6); display: flex; flex-direction: column; }
+.ctl .now-part small { color: var(--text-dim); }
+.ctl .now-part h3 { margin: 0; font-size: var(--text-xl); line-height: 1.2; }
+.ctl .big { font-size: 128px; font-weight: var(--weight-black); line-height: 1; margin: var(--space-4) 0 var(--space-2); }
+.ctl .meta { color: var(--text-dim); font-size: var(--text-sm); }
+.ctl .prog { height: 8px; border-radius: 99px; background: var(--brand-soft); margin: var(--space-4) 0 var(--space-6); overflow: hidden; }
+.ctl .prog i { display: block; height: 100%; background: var(--brand); transition: width 1s linear; }
+.ctl .actions { display: flex; gap: var(--space-3); }
+.ctl .actions .btn { height: var(--tap-main); font-size: var(--text-md); }
+.ctl .actions .main-btn { flex: 1; }
+.ctl .adjust { display: flex; gap: var(--space-2); margin-top: var(--space-3); }
+.ctl .adjust button { flex: 1; height: 40px; border-radius: var(--radius-sm); background: var(--surface); font-weight: var(--weight-bold); font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
+.ctl .scene { margin-top: auto; display: flex; align-items: center; gap: var(--space-3); padding-top: var(--space-5); font-size: var(--text-sm); color: var(--text-dim); }
+.ctl .scene select { flex: 1; height: 40px; border-radius: var(--radius-sm); border: 1px solid var(--line); background: var(--page); padding: 0 var(--space-3); color: var(--text); }
+.ctl .right { border-left: 1px solid var(--line); padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-5); background: var(--surface); }
+.ctl .right h4 { margin: 0 0 var(--space-2); font-size: var(--text-sm); color: var(--text-dim); font-weight: var(--weight-medium); }
+.preview { aspect-ratio: 16 / 9; border-radius: var(--radius-sm); background: var(--page); color: var(--text); display: grid; place-content: center; text-align: center; container-type: size; }
+.preview small { font-size: 8cqh; color: var(--text-dim); }
+.preview b { font-size: 34cqh; font-weight: var(--weight-black); line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.03em; }
+.status { display: grid; gap: var(--space-2); }
+.status div { display: flex; justify-content: space-between; align-items: center; font-size: var(--text-sm); }
+.clockcard { display: flex; align-items: center; gap: var(--space-3); }
+.clockcard .face { width: 64px; height: 64px; flex: none; }
+.clockcard b { font-size: var(--text-xl); font-weight: var(--weight-black); display: block; line-height: 1.1; }
+.clockcard small { color: var(--text-dim); font-size: var(--text-xs); }
+
+/* ---------- 2. Stage Timer app window ---------- */
+.appwin { display: grid; grid-template-columns: 220px 1fr; min-height: 600px; }
+.appwin nav { background: var(--surface); padding: var(--space-5) var(--space-3); display: grid; align-content: start; gap: 2px; }
+.appwin nav .brand { font-weight: var(--weight-black); font-size: var(--text-lg); padding: 0 var(--space-3) var(--space-4); letter-spacing: -0.02em; }
+.appwin nav a { display: flex; align-items: center; gap: var(--space-3); padding: 9px var(--space-3); border-radius: var(--radius-sm); color: var(--text-dim); text-decoration: none; font-size: var(--text-sm); font-weight: var(--weight-medium); }
+.appwin nav a svg { width: 18px; height: 18px; flex: none; }
+.appwin nav a[aria-current] { background: var(--page); color: var(--text); box-shadow: 0 1px 2px rgba(31,42,68,.08); }
+.appwin .content { position: relative; }
+.appwin .hero { position: relative; height: 190px; }
+.appwin .hero .banner { position: absolute; inset: 0; -webkit-mask-image: linear-gradient(#000 40%, transparent); mask-image: linear-gradient(#000 40%, transparent); }
+.appwin .hero .t { position: absolute; left: var(--space-6); bottom: var(--space-3); display: flex; align-items: center; gap: var(--space-3); }
+.appwin .hero h3 { margin: 0; font-size: var(--text-2xl); color: var(--coral); line-height: 1; }
+.appwin .grid { padding: var(--space-4) var(--space-6) var(--space-6); display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--space-4); }
+.linkrow { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2) 0; }
+.linkrow div { flex: 1; } .linkrow b { display: block; font-size: var(--text-sm); } .linkrow code { font-family: var(--font); font-size: var(--text-xs); color: var(--text-dim); }
+.linkrow .btn { height: 34px; padding: 0 var(--space-4); }
+.phones { display: flex; gap: var(--space-4); align-items: center; }
+.qr { width: 104px; height: 104px; flex: none; background: #fff; border-radius: var(--radius-sm); padding: 8px; }
+.pin { font-size: 34px; font-weight: var(--weight-black); letter-spacing: .2em; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.phones small { color: var(--text-dim); font-size: var(--text-xs); display: block; }
+
+/* ---------- 3. Attendance history ---------- */
+.att .hero { position: relative; height: 230px; }
+.att .hero .banner { position: absolute; inset: 0; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 45%), linear-gradient(#000 55%, transparent); -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent 0, #000 45%), linear-gradient(#000 55%, transparent); mask-composite: intersect; }
+.att .hero .t { position: absolute; left: var(--space-7); top: 50%; transform: translateY(-60%); }
+.att .hero h3 { margin: 0; color: var(--coral); font-size: var(--text-2xl); line-height: 1.1; }
+.att .hero small { color: var(--text-dim); }
+.att .body { padding: 0 var(--space-7) var(--space-6); display: grid; grid-template-columns: 1fr 280px; gap: var(--space-5); }
+.tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin-bottom: var(--space-4); }
+.tile small { color: var(--text-dim); font-size: var(--text-sm); display: block; }
+.tile b { font-size: 40px; font-weight: var(--weight-black); line-height: 1.1; display: block; }
+.tile span { font-size: var(--text-xs); color: var(--text-dim); }
+.chart { position: relative; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart .grid line { stroke: var(--line); }
+.chart .axis text { fill: var(--text-dim); font-size: 11px; font-family: var(--font); }
+.chart .bar { fill: var(--brand); transition: opacity .15s; }
+.chart .hit { fill: transparent; cursor: default; }
+.chart.hovering .bar { opacity: .45; } .chart.hovering .bar.on { opacity: 1; }
+.chart .lbl { fill: var(--text); font-size: 12px; font-weight: 700; font-family: var(--font); }
+.tip { position: absolute; pointer-events: none; background: var(--text); color: var(--page); border-radius: var(--radius-sm); padding: 6px 10px; font-size: var(--text-xs); line-height: 1.4; transform: translate(-50%, -100%); opacity: 0; transition: opacity .12s; white-space: nowrap; }
+.tip b { font-size: var(--text-sm); }
+.table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
+.table th { text-align: left; font-weight: var(--weight-medium); color: var(--text-dim); padding: var(--space-2) 0; border-bottom: 1px solid var(--line); }
+.table td { padding: 9px 0; border-bottom: 1px solid var(--line); }
+.table th:not(:first-child), .table td:not(:first-child) { text-align: right; }
+.table tr:last-child td { border-bottom: 0; }
+.side-card { text-align: center; }
+.side-card .disc { width: 130px; height: 130px; margin: var(--space-2) auto var(--space-3); }
+.side-card h3 { color: var(--coral); margin: 0 0 var(--space-1); font-size: var(--text-lg); }
+.side-card p { margin: 0 0 var(--space-4); color: var(--text-dim); font-size: var(--text-sm); }
+.side-card .btn { width: 100%; }

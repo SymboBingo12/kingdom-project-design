@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Clock Mockup</title>
+<style>
+  :root {
+    --bg:#0b0e14; --card:#141923; --line:#232b3a; --fg:#eef1f7; --dim:#8a93a6;
+    --ok:#3ddc84; --warn:#ffb020; --bad:#ff4d4d; --accent:#4c8dff; --new:#c18cff;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #05070b; color: var(--fg); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; padding: 24px 16px 48px; }
+  .intro { max-width: 1280px; margin: 0 auto 24px; }
+  .intro h1 { font-size: 22px; margin: 0 0 6px; }
+  .intro p { color: var(--dim); margin: 0; font-size: 15px; line-height: 1.5; }
+  .new { color: var(--new); font-weight: 600; }
+  .grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); gap: 28px; align-items: start; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+  .label { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); margin: 0 0 8px 2px; }
+  .label b { color: var(--fg); }
+  .note { color: var(--dim); font-size: 13px; margin: 8px 2px 0; line-height: 1.45; }
+  .stack { display: grid; gap: 28px; }
+  .tag { outline: 2px dashed var(--new); outline-offset: 4px; border-radius: 10px; }
+
+  /* ---- Control page (real styles) ---- */
+  .phone { background: var(--bg); border: 1px solid var(--line); border-radius: 22px; padding: 12px 16px 20px; }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 4px 2px 12px; gap: 8px; }
+  header h1 { font-size: 15px; margin: 0; font-weight: 600; }
+  header small { color: var(--dim); display: block; font-weight: 400; margin-top: 2px; }
+  .icons { display: flex; align-items: center; gap: 8px; }
+  .ib { height: 32px; padding: 0 10px; border-radius: 9px; background: var(--card); border: 1px solid var(--line); font-size: 13px; color: var(--dim); display: inline-flex; align-items: center; }
+  .conn { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--dim); }
+  .conn i { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); }
+  .now { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; padding: 2px 6px; }
+  .now span { font-size: 11px; color: var(--dim); font-weight: 600; margin-left: 2px; }
+  .clock { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px 16px 14px; text-align: center; }
+  .clock .sec { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
+  .clock .nm { font-size: 18px; font-weight: 600; margin: 4px 0 2px; }
+  .clock .t { font-size: 64px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.05; color: var(--ok); }
+  .clock .meta { color: var(--dim); font-size: 13px; margin-top: 2px; }
+  .bar { height: 8px; background: #232b3a; border-radius: 99px; overflow: hidden; margin: 12px 0 0; }
+  .bar i { display: block; height: 100%; width: 38%; background: var(--ok); }
+  .main { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; margin-top: 12px; }
+  .go { height: 56px; border-radius: 16px; font-size: 20px; font-weight: 700; background: var(--bad); color: #2b0505; display: grid; place-items: center; }
+  .reset { height: 56px; padding: 0 14px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); font-size: 15px; display: grid; place-items: center; }
+  .adj { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
+  .adj div { height: 44px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); font-size: 15px; font-weight: 600; display: grid; place-items: center; }
+  h2 { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); font-weight: 600; margin: 18px 4px 8px; }
+  .part { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin-bottom: 6px; }
+  .part .n { flex: 1; font-size: 15px; } .part .d { color: var(--dim); font-size: 14px; }
+  .part.cur { border-color: var(--accent); background: #16213a; } .part.cur .n { font-weight: 700; }
+  .part .dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--line); }
+  .part.cur .dot { border-color: var(--accent); background: var(--accent); }
+
+  /* ---- Display page (real styles, vmin -> cqmin so it scales inside the frame) ---- */
+  .screen { aspect-ratio: 16 / 9; container-type: size; background: #0b0e14; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; position: relative;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2cqmin; }
+  .screen .section { font-size: 2.6cqmin; color: var(--dim); text-transform: uppercase; letter-spacing: .14em; opacity: .8; }
+  .screen .name { font-size: 5cqmin; color: var(--dim); text-align: center; }
+  .screen .time { font-size: 30cqmin; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+  .screen .bar2 { width: 70cqw; height: 2.2cqmin; background: rgba(255,255,255,.12); border-radius: 99px; overflow: hidden; }
+  .screen .bar2 i { display: block; height: 100%; width: 38%; background: var(--ok); }
+  .screen.running .time { color: var(--ok); }
+  .screen.idle .time { color: var(--fg); }
+  .screen.idle .time span { font-size: 9cqmin; color: var(--dim); margin-left: 1.5cqmin; font-weight: 600; }
+  .screen.idle .up { font-size: 4.2cqmin; color: var(--dim); }
+  .screen.idle .up b { color: var(--fg); font-weight: 600; }
+  .screen.idle .kicker { font-size: 2.6cqmin; color: var(--new); text-transform: uppercase; letter-spacing: .14em; }
+</style>
+</head>
+<body>
+  <div class="intro">
+    <h1>Mockup: showing the current time</h1>
+    <p>Parts marked with a <span class="new">purple dashed outline</span> are new. The clock below really ticks. Nothing in the app has changed yet; this is only a picture.</p>
+  </div>
+
+  <div class="grid">
+    <div>
+      <p class="label"><b>1 · Control page / OBS dock</b> (a talk is running)</p>
+      <div class="phone">
+        <header>
+          <h1>Stage Timer<small>Weekend meeting</small></h1>
+          <div class="icons">
+            <div class="now tag" id="ctrlNow">7:42<span>PM</span></div>
+            <div class="ib">Connect</div>
+            <div class="conn"><i></i>Live</div>
+          </div>
+        </header>
+        <section class="clock">
+          <div class="sec">Weekend Meeting</div>
+          <div class="nm">Public Talk</div>
+          <div class="t">18:34</div>
+          <div class="meta">Planned 30:00 · Running</div>
+          <div class="bar"><i></i></div>
+        </section>
+        <div class="main"><div class="go">Stop</div><div class="reset">Pause</div><div class="reset">Reset</div></div>
+        <div class="adj"><div>−1:00</div><div>−0:30</div><div>+0:30</div><div>+1:00</div></div>
+        <h2>Weekend Meeting</h2>
+        <div class="part cur"><i class="dot"></i><span class="n">Public Talk</span><span class="d">30:00</span></div>
+        <div class="part"><i class="dot"></i><span class="n">Watchtower Study</span><span class="d">1:00:00</span></div>
+      </div>
+      <p class="note">The current time sits in the top bar, always visible, so whoever runs the timer can see if the meeting is on schedule.</p>
+    </div>
+
+    <div class="stack">
+      <div>
+        <p class="label"><b>2 · Speaker's screen, between parts</b> (nothing running)</p>
+        <div class="screen idle tag">
+          <div class="kicker">Current time</div>
+          <div class="time" id="dispNow">7:42<span>PM</span></div>
+          <div class="up">Up next: <b>Public Talk</b> · 30:00</div>
+        </div>
+        <p class="note">Before the meeting and between parts, the screen shows the time of day instead of a frozen "30:00". As soon as you press Start it switches to the countdown (screen 3).</p>
+      </div>
+      <div>
+        <p class="label"><b>3 · Speaker's screen, during a talk</b> (unchanged)</p>
+        <div class="screen running">
+          <div class="section">Weekend Meeting</div>
+          <div class="name">Public Talk</div>
+          <div class="time">18:34</div>
+          <div class="bar2"><i></i></div>
+        </div>
+        <p class="note">While someone is speaking, only the countdown shows, exactly like today, so the speaker never confuses the clock with their time left.</p>
+      </div>
+    </div>
+  </div>
+
+<script>
+  function tick() {
+    const d = new Date();
+    const h = d.getHours() % 12 || 12;
+    const m = String(d.getMinutes()).padStart(2, '0');
+    const ap = d.getHours() < 12 ? 'AM' : 'PM';
+    for (const id of ['ctrlNow', 'dispNow']) document.getElementById(id).innerHTML = `${h}:${m}<span>${ap}</span>`;
+  }
+  tick();
+  setInterval(tick, 1000);
+</script>
+</body>
+</html>

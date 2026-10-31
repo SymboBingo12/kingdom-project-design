@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Steward on Desktop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="screens.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--text); font-family: var(--font); font-size: var(--text-md); line-height: 1.55; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  button, select { font: inherit; color: inherit; }
+  button { cursor: pointer; border: 0; background: none; }
+  :focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; border-radius: 6px; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 var(--space-5); }
+  .num { font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  svg.art { display: block; width: 100%; height: 100%; }
+
+  .masthead { display: flex; align-items: center; justify-content: space-between; padding: var(--space-4) 0; gap: var(--space-4); }
+  .masthead b { font-size: clamp(30px, 4vw, 44px); font-weight: var(--weight-black); letter-spacing: -0.03em; color: var(--duo-deepteal); line-height: 1; }
+  .masthead nav { display: flex; gap: var(--space-5); font-size: var(--text-sm); }
+  .masthead nav a { color: var(--text-dim); text-decoration: none; font-weight: var(--weight-medium); }
+  .masthead nav a[aria-current] { color: var(--coral); }
+  :root[data-theme="dark"] .masthead b { color: var(--duo-aqua); }
+  .theme { display: flex; padding: 3px; border-radius: var(--radius-pill); background: var(--surface); border: 1px solid var(--line); }
+  .theme button { padding: 6px 14px; min-height: 36px; border-radius: var(--radius-pill); font-size: var(--text-sm); color: var(--text-dim); }
+  .theme button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+  :root[data-theme="dark"] .theme button[aria-pressed="true"] { background: var(--brand); color: var(--on-brand); }
+  .intro { padding: var(--space-6) 0 var(--space-7); max-width: 640px; }
+  .intro h1 { color: var(--coral); font-size: var(--text-2xl); line-height: 1.15; margin: 0 0 var(--space-3); }
+  .intro p { margin: 0; color: var(--text-dim); font-size: var(--text-lg); }
+
+  .shot { margin-bottom: var(--space-8); }
+  .shot > h2 { font-size: var(--text-xl); color: var(--coral); margin: 0 0 var(--space-1); line-height: 1.2; }
+  .shot > p { margin: 0 0 var(--space-5); color: var(--text-dim); max-width: 70ch; }
+  .notes { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); margin-top: var(--space-5); }
+  .notes div { border-top: 2px solid var(--coral); padding-top: var(--space-2); font-size: var(--text-sm); color: var(--text-dim); }
+  .notes b { display: block; color: var(--text); font-size: var(--text-md); }
+  @media (max-width: 760px) { .notes { grid-template-columns: 1fr; } }
+
+  footer { padding: var(--space-6) 0 var(--space-7); border-top: 1px solid var(--line); color: var(--text-dim); font-size: var(--text-sm); }
+  footer p { margin: 0; max-width: 70ch; }
+
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+  @media print { .theme { display: none; } }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="masthead">
+      <b>Steward</b>
+      <div style="display:flex;align-items:center;gap:var(--space-5)">
+        <nav><a href="index.html">Brand</a><a href="desktop.html" aria-current="page">Desktop</a><a href="slides.html">Slides</a></nav>
+        <div class="theme" role="group" aria-label="Theme"><button data-t="light" aria-pressed="true">Light</button><button data-t="dark" aria-pressed="false">Dark</button></div>
+      </div>
+    </header>
+
+    <div class="intro">
+      <h1>The same family on a big screen</h1>
+      <p>At the sound desk, the operator has a laptop and room to spare. The extra space goes to seeing more at once, never to more decoration: one banner of art per screen, and everything else calm.</p>
+    </div>
+
+    <!-- 1 -->
+    <section class="shot" aria-labelledby="s1">
+      <h2 id="s1">Stage Timer at the sound desk</h2>
+      <p>The control page in a full browser window. The whole meeting is on the left, the clock in the middle, and on the right exactly what the speaker sees.</p>
+      <div class="scroller"><div class="window">
+        <div class="chrome"><div class="dots"><i></i><i></i><i></i></div><div class="url">stage.local/control</div><div class="spacer"></div></div>
+        <div class="ctl">
+          <aside>
+            <div class="side-hero"><div class="banner art-grain" id="a1"></div><div class="t"><small id="today">Saturday, October 31</small><b>Weekend meeting</b></div></div>
+            <div class="parts">
+              <button class="partrow done"><svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Opening song and prayer</span><em>5:00</em></button>
+              <button class="partrow cur"><i class="dot"></i><span>Public Talk</span><em>30:00</em></button>
+              <button class="partrow"><i class="dot"></i><span>Watchtower Study</span><em>1:00:00</em></button>
+              <button class="partrow"><i class="dot"></i><span>Concluding song</span><em>5:00</em></button>
+            </div>
+            <div class="foot"><button class="btn ghost">Report</button><button class="btn ghost">Refresh</button></div>
+          </aside>
+          <main>
+            <div class="now-part"><small>Now</small><h3>Public Talk</h3></div>
+            <div class="big num" id="c1">18:34</div>
+            <div class="meta">left of 30 minutes. Started at 10:05.</div>
+            <div class="prog"><i id="p1" style="width:38%"></i></div>
+            <div class="actions"><button class="btn danger main-btn">Stop</button><button class="btn ghost">Pause</button><button class="btn ghost">Reset</button></div>
+            <div class="adjust"><button>−1:00</button><button>−0:30</button><button>+0:30</button><button>+1:00</button></div>
+            <label class="scene">Scene for this part <select><option>Speaker close-up</option><option>Full stage</option></select></label>
+          </main>
+          <div class="right">
+            <div><h4>The speaker sees</h4><div class="preview stage"><small>Public Talk</small><b id="pv">18:34</b></div></div>
+            <div><h4>Current time</h4><div class="clockcard"><div class="face art-circle art-grain" id="a2"></div><div><b id="now1">10:16</b><small>Meeting ends around 11:45</small></div></div></div>
+            <div><h4>Connected</h4><div class="status">
+              <div>OBS <span class="pill ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Connected</span></div>
+              <div>Phones <span class="pill ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>2 connected</span></div>
+            </div></div>
+          </div>
+        </div>
+      </div></div>
+      <div class="notes">
+        <div><b>Three columns, one job each</b>Plan on the left, act in the middle, check on the right. The eye always knows where to look.</div>
+        <div><b>Art only in the corner</b>A short banner tops the schedule. The timer area stays plain, because it must be read fast.</div>
+        <div><b>Big targets still matter</b>Even with a mouse, Stop is wide and tall. Under pressure, nobody should miss it.</div>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section class="shot" aria-labelledby="s2">
+      <h2 id="s2">The Stage Timer app window</h2>
+      <p>The settings window on the meeting computer, redesigned. Sections move into a side menu, so the page is short and nothing is buried at the bottom.</p>
+      <div class="scroller"><div class="window">
+        <div class="chrome"><div class="dots"><i></i><i></i><i></i></div><div class="title" style="margin:0 auto">Stage Timer</div><div class="spacer"></div></div>
+        <div class="appwin">
+          <nav aria-label="Settings sections">
+            <div class="brand">Stage Timer</div>
+            <a href="#" aria-current="page" onclick="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Overview</a>
+            <a href="#" onclick="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Meeting</a>
+            <a href="#" onclick="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>OBS scenes</a>
+            <a href="#" onclick="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>Reports</a>
+            <a href="#" onclick="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Updates</a>
+            <a href="#" onclick="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>Advanced</a>
+          </nav>
+          <div class="content">
+            <div class="hero"><div class="banner art-grain" id="a3"></div>
+              <div class="t"><h3>Overview</h3><span class="pill ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Running</span></div>
+            </div>
+            <div class="grid">
+              <div class="card">
+                <h3>Open the timer</h3>
+                <div class="linkrow"><div><b>Speaker's screen</b><code>stage.local/display</code></div><button class="btn ghost">Copy link</button><button class="btn primary">Open</button></div>
+                <div class="linkrow"><div><b>Control page</b><code>stage.local/control</code></div><button class="btn ghost">Copy link</button><button class="btn primary">Open</button></div>
+                <div class="linkrow"><div><b>OBS dock</b><code>localhost/dock</code></div><button class="btn ghost">Copy link</button></div>
+              </div>
+              <div class="card">
+                <h3>Control from a phone</h3>
+                <div class="phones">
+                  <div class="qr" id="qr"></div>
+                  <div><small>PIN</small><div class="pin">7835</div><button class="btn ghost" style="height:34px;margin-top:6px">New PIN</button></div>
+                </div>
+              </div>
+              <div class="card" style="grid-column: span 2">
+                <h3>This meeting</h3>
+                <div class="opt"><div>Meeting type<small>Today: weekend meeting, chosen from the day</small></div><div class="seg" role="group" aria-label="Meeting type"><button aria-pressed="true">Auto</button><button aria-pressed="false">Midweek</button><button aria-pressed="false">Weekend</button></div></div>
+                <div class="opt"><div>Circuit overseer's visit<small>Changes the parts for this week</small></div><button class="switch" role="switch" aria-checked="false" aria-label="Circuit overseer's visit"></button></div>
+                <div class="opt"><div>Show the current time<small>On the control page, and on the speaker's screen between parts</small></div><button class="switch" role="switch" aria-checked="true" aria-label="Show the current time"></button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div></div>
+      <div class="notes">
+        <div><b>A menu instead of a long scroll</b>Six short sections replace one tall page. Fewer choices at once (Hick's Law).</div>
+        <div><b>One banner of art</b>A teal clock fades behind the section title. It sets the mood, then stays out of the way.</div>
+        <div><b>Your clock option, built in</b>"Show the current time" is a switch, right next to the other meeting settings.</div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="shot" aria-labelledby="s3">
+      <h2 id="s3">Attendance on a laptop</h2>
+      <p>The history page of the Attendance app. The banner fades from the right, the numbers come first, and the art returns at the edge of the task: the button to start counting.</p>
+      <div class="scroller"><div class="window">
+        <div class="chrome"><div class="dots"><i></i><i></i><i></i></div><div class="url">attendance.local/history</div><div class="spacer"></div></div>
+        <div class="att">
+          <div class="hero"><div class="banner art-grain" id="a4"></div><div class="t"><h3>Attendance</h3><small>The last 12 meetings</small></div></div>
+          <div class="body">
+            <div>
+              <div class="tiles">
+                <div class="card tile"><small>Last meeting</small><b class="num">128</b><span>Thursday, October 29</span></div>
+                <div class="card tile"><small>Average</small><b class="num" id="avg">138</b><span>Across 12 meetings</span></div>
+                <div class="card tile"><small>Highest</small><b class="num" id="max">152</b><span>Sunday, October 25</span></div>
+              </div>
+              <div class="card">
+                <h3>Present at each meeting</h3>
+                <div class="chart" id="chart"><div class="tip" id="tip"></div></div>
+              </div>
+            </div>
+            <div style="display:grid;gap:var(--space-4);align-content:start">
+              <div class="card side-card">
+                <div class="disc art-circle art-grain" id="a5"></div>
+                <h3>Weekend meeting</h3>
+                <p>Starts in 2 hours. Ready when you are.</p>
+                <button class="btn primary">Count now</button>
+              </div>
+              <div class="card">
+                <h3>Recent</h3>
+                <table class="table"><thead><tr><th>Meeting</th><th>Hall</th><th>Zoom</th><th>Total</th></tr></thead><tbody id="recent"></tbody></table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div></div>
+      <div class="notes">
+        <div><b>Numbers first</b>Three answers at a glance before any chart: the last meeting, the average and the highest.</div>
+        <div><b>One colour for the chart</b>A single series needs a single blue. Hover a bar for the details; the table below has every number.</div>
+        <div><b>Art leads to action</b>The circle of art sits on the card that starts the next count, so the eye lands on the next step.</div>
+      </div>
+    </section>
+
+    <footer><p>Steward is a working name. These tools are independent and are not affiliated with, endorsed by, or connected to Jehovah's Witnesses, JW.ORG, JW Library or the Watch Tower Bible and Tract Society. All artwork here is original.</p></footer>
+  </div>
+
+<script src="art.js"></script>
+<script>
+  const $ = (id) => document.getElementById(id);
+  const hm = (d) => `${d.getHours() % 12 || 12}:${String(d.getMinutes()).padStart(2, '0')}`;
+
+  $('a1').innerHTML = platformArt({ w: 640, h: 330, cx: 420, id: 'd1' });
+  $('a2').innerHTML = clockArt({ id: 'd2' });
+  $('a3').innerHTML = platformArt({ w: 1600, h: 380, cx: 1150, crowd: false, dark: '#164e57', mid: '#a9d6d9', light: '#eaf5f5', id: 'd3' });
+  $('a4').innerHTML = platformArt({ w: 1600, h: 460, cx: 1180, id: 'd4' });
+  $('a5').innerHTML = platformArt({ w: 620, h: 620, cx: 310, id: 'd5' });
+  $('today').textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+
+  // Live timer and clock
+  let left = 18 * 60 + 34;
+  function tick() {
+    left = left > 0 ? left - 1 : 18 * 60 + 34;
+    const t = `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}`;
+    $('c1').textContent = t; $('pv').textContent = t;
+    $('p1').style.width = `${(1 - left / 1800) * 100}%`;
+    $('now1').textContent = hm(new Date());
+  }
+  tick(); setInterval(tick, 1000);
+
+  // A stand-in QR pattern (the real app draws a real code)
+  (function qr() {
+    const n = 21, cells = [];
+    let seed = 7;
+    const rnd = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const inF = (ox, oy) => x >= ox && x < ox + 7 && y >= oy && y < oy + 7;
+      const f = inF(0, 0) || inF(n - 7, 0) || inF(0, n - 7);
+      if (f) {
+        const ox = x < 7 ? 0 : n - 7, oy = y < 7 ? 0 : n - 7, dx = x - ox, dy = y - oy;
+        const ring = dx === 0 || dy === 0 || dx === 6 || dy === 6, core = dx >= 2 && dx <= 4 && dy >= 2 && dy <= 4;
+        if (ring || core) cells.push(`<rect x="${x}" y="${y}" width="1" height="1"/>`);
+      } else if (rnd() > 0.52) cells.push(`<rect x="${x}" y="${y}" width="1" height="1"/>`);
+    }
+    $('qr').innerHTML = `<svg viewBox="0 0 ${n} ${n}" width="100%" height="100%" shape-rendering="crispEdges" fill="#1f2a44" aria-label="QR code">${cells.join('')}</svg>`;
+  })();
+
+  // Attendance: one series, one colour
+  const data = [
+    ['Sun, Sep 20', 'Weekend', 146, 121, 25], ['Thu, Sep 24', 'Midweek', 126, 103, 23], ['Sun, Sep 27', 'Weekend', 148, 124, 24],
+    ['Thu, Oct 1', 'Midweek', 129, 107, 22], ['Sun, Oct 4', 'Weekend', 150, 126, 24], ['Thu, Oct 8', 'Midweek', 124, 101, 23],
+    ['Sun, Oct 11', 'Weekend', 145, 122, 23], ['Thu, Oct 15', 'Midweek', 131, 108, 23], ['Sun, Oct 18', 'Weekend', 147, 124, 23],
+    ['Thu, Oct 22', 'Midweek', 127, 104, 23], ['Sun, Oct 25', 'Weekend', 152, 128, 24], ['Thu, Oct 29', 'Midweek', 128, 105, 23],
+  ];
+  $('avg').textContent = Math.round(data.reduce((s, d) => s + d[2], 0) / data.length);
+  $('recent').innerHTML = data.slice(-4).reverse().map((d) => `<tr><td>${d[0]}</td><td>${d[3]}</td><td>${d[4]}</td><td><b>${d[2]}</b></td></tr>`).join('');
+
+  (function chart() {
+    const W = 640, H = 220, pad = { l: 34, r: 8, t: 22, b: 26 }, max = 160;
+    const iw = W - pad.l - pad.r, ih = H - pad.t - pad.b, step = iw / data.length, bw = Math.min(26, step - 10);
+    const y = (v) => pad.t + ih - (v / max) * ih;
+    const ticks = [0, 50, 100, 150];
+    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Bar chart of people present at each of the last 12 meetings, from 124 to 152">`;
+    s += `<g class="grid">${ticks.map((t) => `<line x1="${pad.l}" x2="${W - pad.r}" y1="${y(t)}" y2="${y(t)}"/>`).join('')}</g>`;
+    s += `<g class="axis">${ticks.map((t) => `<text x="${pad.l - 8}" y="${y(t) + 4}" text-anchor="end">${t}</text>`).join('')}`;
+    data.forEach((d, i) => { if (i % 2 === 0 || i === data.length - 1) s += `<text x="${pad.l + step * i + step / 2}" y="${H - 6}" text-anchor="middle">${d[0].split(', ')[1]}</text>`; });
+    s += '</g>';
+    data.forEach((d, i) => {
+      const x = pad.l + step * i + (step - bw) / 2, top = y(d[2]), h = pad.t + ih - top, r = 4;
+      s += `<path class="bar" data-i="${i}" d="M${x} ${pad.t + ih} V${top + r} Q${x} ${top} ${x + r} ${top} H${x + bw - r} Q${x + bw} ${top} ${x + bw} ${top + r} V${pad.t + ih} Z"/>`;
+    });
+    const last = data.length - 1, lx = pad.l + step * last + step / 2;
+    s += `<text class="lbl" x="${lx}" y="${y(data[last][2]) - 7}" text-anchor="middle">${data[last][2]}</text>`;
+    data.forEach((d, i) => { s += `<rect class="hit" data-i="${i}" x="${pad.l + step * i}" y="${pad.t}" width="${step}" height="${ih}"/>`; });
+    s += '</svg>';
+    const box = $('chart');
+    box.insertAdjacentHTML('afterbegin', s);
+    const tip = $('tip'), svg = box.querySelector('svg');
+    box.addEventListener('mousemove', (e) => {
+      const hit = e.target.closest('.hit');
+      if (!hit) return;
+      const i = Number(hit.dataset.i), d = data[i];
+      box.classList.add('hovering');
+      box.querySelectorAll('.bar').forEach((b) => b.classList.toggle('on', Number(b.dataset.i) === i));
+      const r = svg.getBoundingClientRect(), k = r.width / W;
+      tip.style.left = `${(pad.l + step * i + step / 2) * k}px`;
+      tip.style.top = `${(y(d[2]) - 8) * k}px`;
+      tip.innerHTML = `<b>${d[2]} present</b><br>${d[0]}, ${d[1].toLowerCase()}<br>Hall ${d[3]}, Zoom ${d[4]}`;
+      tip.style.opacity = 1;
+    });
+    box.addEventListener('mouseleave', () => { box.classList.remove('hovering'); tip.style.opacity = 0; });
+  })();
+
+  function setTheme(t) {
+    document.documentElement.dataset.theme = t;
+    document.querySelectorAll('.theme button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.t === t));
+  }
+  document.querySelector('.theme').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setTheme(b.dataset.t); });
+  setTheme('light');
+
+  // Printing or saving as PDF gives one tall page that matches the screen, instead of sections cut across sheets
+  const pageSize = document.createElement('style');
+  document.head.append(pageSize);
+  // The browser lays out a printed page at 3/4 of its size (it reads the size as points), so size it up by 4/3.
+  // Printed layout can also run a little taller than the screen; the 8% spare becomes white space below the footer.
+  const sizePage = () => { const d = document.documentElement; pageSize.textContent = `@page { size: ${Math.ceil(d.clientWidth / 0.75)}px ${Math.ceil((d.scrollHeight * 1.08) / 0.75)}px; margin: 0; }`; };
+  addEventListener('load', sizePage); document.fonts.ready.then(sizePage); document.fonts.addEventListener('loadingdone', sizePage); addEventListener('beforeprint', sizePage);
+</script>
+</body>
+</html>

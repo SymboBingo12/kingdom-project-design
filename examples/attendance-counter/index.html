@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Attendance Counter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Every colour, size and space below comes from the shared design tokens -->
+<link rel="stylesheet" href="../../tokens/tokens.css">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--page); color: var(--text); font-family: var(--font); font-size: var(--text-md); padding: var(--space-5) var(--space-4) 48px; }
+  button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+  :focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; border-radius: 6px; }
+
+  .page-head { max-width: 1180px; margin: 0 auto var(--space-5); display: flex; gap: var(--space-4); align-items: flex-start; justify-content: space-between; flex-wrap: wrap; }
+  .page-head h1 { font-size: var(--text-xl); font-weight: var(--weight-bold); margin: 0 0 var(--space-1); }
+  .page-head p { margin: 0; color: var(--text-dim); max-width: 640px; line-height: 1.55; font-size: var(--text-sm); }
+  .theme { display: flex; background: var(--surface); border: 1px solid var(--line); border-radius: 99px; padding: 3px; }
+  .theme button { padding: 6px 14px; border-radius: 99px; font-size: var(--text-sm); color: var(--text-dim); min-height: 36px; }
+  .theme button[aria-pressed="true"] { background: var(--brand); color: var(--on-brand); }
+
+  .layout { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 390px) minmax(0, 1fr); gap: var(--space-6); align-items: start; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+  .label { font-size: var(--text-xs); letter-spacing: .1em; text-transform: uppercase; color: var(--text-dim); font-weight: var(--weight-bold); margin: 0 0 var(--space-2) 2px; }
+
+  /* ---------- The example app ---------- */
+  .app { background: var(--page); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; min-height: 720px; position: relative; }
+  .topbar { background: var(--brand); color: var(--on-brand); padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; }
+  :root[data-theme="dark"] .topbar { background: var(--surface); color: var(--text); border-bottom: 1px solid var(--line); }
+  .topbar h2 { font-size: var(--text-md); font-weight: var(--weight-bold); margin: 0; }
+  .topbar small { display: block; font-size: var(--text-xs); opacity: .8; font-weight: var(--weight-regular); margin-top: 1px; }
+  .now { font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; }
+  .now span { font-size: 11px; opacity: .75; margin-left: 2px; }
+  .screen { flex: 1; padding: var(--space-4); display: none; }
+  .screen.on { display: block; animation: enter .25s cubic-bezier(.2,.9,.3,1); }
+  @keyframes enter { from { opacity: 0; transform: translateY(6px); } }
+
+  .total { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); padding: var(--space-4); text-align: center; }
+  .total .k { font-size: var(--text-xs); letter-spacing: .12em; text-transform: uppercase; color: var(--brand); font-weight: var(--weight-bold); }
+  .total .n { font-size: 64px; font-weight: 700; line-height: 1.05; font-variant-numeric: tabular-nums; display: inline-block; }
+  .total .n.bump { animation: bump .15s ease-out; }
+  @keyframes bump { 50% { transform: scale(1.06); } }
+  .total .meta { color: var(--text-dim); font-size: var(--text-sm); }
+
+  h3 { font-size: var(--text-xs); letter-spacing: .12em; text-transform: uppercase; color: var(--text-dim); font-weight: var(--weight-bold); margin: var(--space-5) 4px var(--space-2); }
+  .row { display: flex; align-items: center; gap: var(--space-3); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 10px 10px 10px 14px; margin-bottom: 6px; }
+  .row .nm { flex: 1; }
+  .row .nm small { display: block; color: var(--text-dim); font-size: var(--text-xs); }
+  .row .c { min-width: 44px; text-align: center; font-size: var(--text-lg); font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; }
+  .step { width: var(--tap-min); height: var(--tap-min); border-radius: var(--radius-sm); border: 1px solid var(--line); display: grid; place-items: center; font-size: 22px; font-weight: var(--weight-bold); color: var(--brand-strong); transition: transform .12s ease-out, background .12s; }
+  .step.plus { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
+  .step:active { transform: scale(.94); }
+
+  .primary { width: 100%; height: var(--tap-main); border-radius: var(--radius-sm); background: var(--brand); color: var(--on-brand); font-size: var(--text-lg); font-weight: var(--weight-bold); margin-top: var(--space-4); transition: transform .12s ease-out; }
+  .primary:active { transform: scale(.98); }
+
+  .toast { position: absolute; left: var(--space-4); right: var(--space-4); bottom: 84px; background: var(--text); color: var(--page); border-radius: var(--radius-sm); padding: 12px 14px; font-size: var(--text-sm);
+    display: flex; gap: var(--space-2); align-items: center; opacity: 0; transform: translateY(12px); transition: opacity .2s, transform .3s cubic-bezier(.2,.9,.3,1.2); pointer-events: none; }
+  .toast.show { opacity: 1; transform: none; }
+
+  .hist { display: flex; justify-content: space-between; align-items: center; }
+  .hist .d { color: var(--text-dim); font-size: var(--text-sm); }
+  .hist .v { font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; }
+
+  .opt { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+  .opt small { display: block; color: var(--text-dim); font-size: var(--text-xs); margin-top: 2px; }
+  .switch { width: 44px; height: 26px; border-radius: 99px; background: var(--line); position: relative; flex: none; transition: background .15s; }
+  .switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform .15s ease-out; box-shadow: 0 1px 3px rgba(0,0,0,.25); }
+  .switch[aria-checked="true"] { background: var(--brand); }
+  .switch[aria-checked="true"]::after { transform: translateX(18px); }
+
+  .tabs { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); background: var(--surface); }
+  .tabs button { padding: 10px 0 12px; display: grid; justify-items: center; gap: 3px; font-size: 11px; color: var(--text-dim); min-height: 60px; }
+  .tabs button svg { width: 22px; height: 22px; }
+  .tabs button[aria-selected="true"] { color: var(--brand); font-weight: var(--weight-bold); }
+
+  /* ---------- Design system sheet ---------- */
+  .sheet { display: grid; gap: var(--space-5); }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); padding: var(--space-4); }
+  .panel h4 { margin: 0 0 var(--space-3); font-size: var(--text-sm); font-weight: var(--weight-bold); }
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: var(--space-2); }
+  .sw { border: 1px solid var(--line); border-radius: var(--radius-sm); overflow: hidden; font-size: var(--text-xs); }
+  .sw i { display: block; height: 44px; }
+  .sw div { padding: 6px 8px; } .sw b { display: block; font-weight: var(--weight-bold); } .sw code { color: var(--text-dim); font-size: 11px; }
+  .type div { padding: 4px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); }
+  .type div:last-child { border-bottom: 0; } .type code { color: var(--text-dim); font-size: 11px; white-space: nowrap; }
+  .demo { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+  .btn { height: var(--tap-min); padding: 0 18px; border-radius: var(--radius-sm); font-weight: var(--weight-bold); font-size: var(--text-sm); border: 1px solid var(--line); background: var(--surface); }
+  .btn.p { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
+  .btn.d { background: var(--danger); border-color: var(--danger); color: #fff; }
+  .banner { border-radius: var(--radius-sm); padding: 10px 12px; font-size: var(--text-sm); display: flex; gap: var(--space-2); align-items: flex-start; margin-top: var(--space-2); border: 1px solid; }
+  .banner svg { width: 18px; height: 18px; flex: none; margin-top: 1px; }
+  .banner.warn { color: var(--text); border-color: var(--warn); background: color-mix(in srgb, var(--warn) 12%, var(--surface)); }
+  .banner.warn svg { color: var(--warn); }
+  .banner.ok { color: var(--text); border-color: var(--ok); background: color-mix(in srgb, var(--ok) 12%, var(--surface)); }
+  .banner.ok svg { color: var(--ok); }
+  .rules { margin: 0; padding-left: 18px; color: var(--text-dim); font-size: var(--text-sm); line-height: 1.7; }
+  .rules b { color: var(--text); }
+
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+</style>
+</head>
+<body>
+  <div class="page-head">
+    <div>
+      <h1>Example project: Attendance Counter</h1>
+      <p>A second app built only from the shared design system, to show how every future project would look and feel the same as Stage Timer. Try it: tap the + and − buttons, save the count, switch tabs, and change the theme.</p>
+    </div>
+    <div class="theme" role="group" aria-label="Theme">
+      <button data-t="light" aria-pressed="true">Light</button>
+      <button data-t="dark" aria-pressed="false">Dark</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div>
+      <p class="label">The app</p>
+      <div class="app">
+        <div class="topbar">
+          <h2>Attendance<small id="meetingName">Weekend meeting</small></h2>
+          <div class="now" id="now">7:42<span>PM</span></div>
+        </div>
+
+        <section class="screen on" id="s-count">
+          <div class="total">
+            <div class="k">Total present</div>
+            <div class="n" id="total">0</div>
+            <div class="meta" id="lastSaved">Not saved yet</div>
+          </div>
+          <h3>Count by place</h3>
+          <div id="places"></div>
+          <button class="primary" id="save">Save count</button>
+        </section>
+
+        <section class="screen" id="s-history">
+          <h3 style="margin-top:4px">Recent meetings</h3>
+          <div id="history"></div>
+        </section>
+
+        <section class="screen" id="s-settings">
+          <h3 style="margin-top:4px">Options</h3>
+          <div class="row opt"><div>Count Zoom attendees<small>Adds a line for people joining by video</small></div><button class="switch" role="switch" aria-checked="true" id="zoomSw" aria-label="Count Zoom attendees"></button></div>
+          <div class="row opt"><div>Dark theme<small>Easier on the eyes in a dim hall</small></div><button class="switch" role="switch" aria-checked="false" id="darkSw" aria-label="Dark theme"></button></div>
+        </section>
+
+        <div class="toast" id="toast" role="status" aria-live="polite">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          <span id="toastText">Saved</span>
+        </div>
+
+        <nav class="tabs" role="tablist">
+          <button role="tab" aria-selected="true" data-s="count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.3-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.8c1.7.8 2.7 2.5 3 5.2"/></svg>Count</button>
+          <button role="tab" aria-selected="false" data-s="history"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>History</button>
+          <button role="tab" aria-selected="false" data-s="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>Settings</button>
+        </nav>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <div>
+        <p class="label">The design system it's built from</p>
+        <div class="panel">
+          <h4>Colours (they change with the theme)</h4>
+          <div class="swatches" id="swatches"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h4>Type: Noto Sans</h4>
+        <div class="type">
+          <div><span style="font-size:var(--text-xl);font-weight:600">Weekend meeting</span><code>xl · 24 px</code></div>
+          <div><span style="font-size:var(--text-lg);font-weight:600">Watchtower Study</span><code>lg · 19 px</code></div>
+          <div><span style="font-size:var(--text-md)">Body text for reading</span><code>md · 16 px</code></div>
+          <div><span style="font-size:var(--text-sm);color:var(--text-dim)">Helper text and notes</span><code>sm · 14 px</code></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h4>Buttons and messages</h4>
+        <div class="demo">
+          <button class="btn p">Start</button>
+          <button class="btn">Pause</button>
+          <button class="btn d">Stop</button>
+        </div>
+        <div class="banner warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17.5v.01"/></svg><span>Couldn't reach OBS. Check that OBS is open, then try again.</span></div>
+        <div class="banner ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg><span>Schedule downloaded for this week.</span></div>
+      </div>
+      <div class="panel">
+        <h4>Rules you can see in the app</h4>
+        <ul class="rules">
+          <li><b>Big targets:</b> every button is at least 44 px; the main one is the biggest (Fitts's Law).</li>
+          <li><b>Few choices:</b> three tabs, one main action per screen (Hick's Law).</li>
+          <li><b>Familiar:</b> a top bar and bottom tabs, the patterns people already know (Jakob's Law).</li>
+          <li><b>Never colour alone:</b> messages carry an icon and words, not only amber or green.</li>
+          <li><b>Calm motion:</b> quick, small, and switched off when "reduce motion" is on.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const places = [
+    { key: 'hall', name: 'Main hall', count: 112 },
+    { key: 'overflow', name: 'Overflow room', hint: 'Back room and foyer', count: 6 },
+    { key: 'zoom', name: 'Zoom', hint: 'Video attendees', count: 23 },
+  ];
+  let zoomOn = true;
+  const history = [
+    { d: 'Thu, Oct 29 · Midweek', v: 128 },
+    { d: 'Sun, Oct 25 · Weekend', v: 152 },
+    { d: 'Thu, Oct 22 · Midweek', v: 131 },
+    { d: 'Sun, Oct 18 · Weekend', v: 147 },
+  ];
+
+  const total = () => places.filter((p) => p.key !== 'zoom' || zoomOn).reduce((s, p) => s + p.count, 0);
+  const clock = (d = new Date()) => `${d.getHours() % 12 || 12}:${String(d.getMinutes()).padStart(2, '0')}`;
+  const ampm = (d = new Date()) => (d.getHours() < 12 ? 'AM' : 'PM');
+
+  function drawPlaces() {
+    $('places').innerHTML = places.filter((p) => p.key !== 'zoom' || zoomOn).map((p) => `
+      <div class="row">
+        <div class="nm">${p.name}${p.hint ? `<small>${p.hint}</small>` : ''}</div>
+        <button class="step" data-k="${p.key}" data-d="-1" aria-label="One less in ${p.name}">−</button>
+        <div class="c" aria-live="polite">${p.count}</div>
+        <button class="step plus" data-k="${p.key}" data-d="1" aria-label="One more in ${p.name}">+</button>
+      </div>`).join('');
+    const n = $('total');
+    n.textContent = total();
+    n.classList.remove('bump'); void n.offsetWidth; n.classList.add('bump');
+  }
+  function drawHistory() {
+    $('history').innerHTML = history.map((h) => `<div class="row hist"><span class="d">${h.d}</span><span class="v">${h.v}</span></div>`).join('');
+  }
+
+  $('places').addEventListener('click', (e) => {
+    const b = e.target.closest('.step');
+    if (!b) return;
+    const p = places.find((x) => x.key === b.dataset.k);
+    p.count = Math.max(0, p.count + Number(b.dataset.d));
+    drawPlaces();
+  });
+
+  let toastTimer;
+  $('save').addEventListener('click', () => {
+    const now = new Date();
+    $('lastSaved').textContent = `Saved at ${clock(now)} ${ampm(now)}`;
+    history.unshift({ d: 'Sat, Oct 31 · Weekend', v: total() });
+    drawHistory();
+    $('toastText').textContent = `Saved: ${total()} present`;
+    $('toast').classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => $('toast').classList.remove('show'), 2200);
+  });
+
+  document.querySelector('.tabs').addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    document.querySelectorAll('.tabs button').forEach((t) => t.setAttribute('aria-selected', t === b));
+    document.querySelectorAll('.screen').forEach((s) => s.classList.toggle('on', s.id === 's-' + b.dataset.s));
+  });
+
+  $('zoomSw').addEventListener('click', (e) => {
+    zoomOn = !zoomOn;
+    e.currentTarget.setAttribute('aria-checked', zoomOn);
+    drawPlaces();
+  });
+
+  const swatchList = [
+    ['Brand', '--brand'], ['Brand strong', '--brand-strong'], ['Brand soft', '--brand-soft'], ['Page', '--page'],
+    ['Surface', '--surface'], ['Text', '--text'], ['Text dim', '--text-dim'], ['OK', '--ok'], ['Warning', '--warn'], ['Danger', '--danger'],
+  ];
+  function drawSwatches() {
+    const cs = getComputedStyle(document.documentElement);
+    $('swatches').innerHTML = swatchList.map(([n, v]) => `<div class="sw"><i style="background:var(${v})"></i><div><b>${n}</b><code>${cs.getPropertyValue(v).trim()}</code></div></div>`).join('');
+  }
+
+  function setTheme(t) {
+    document.documentElement.dataset.theme = t;
+    document.querySelectorAll('.theme button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.t === t));
+    $('darkSw').setAttribute('aria-checked', t === 'dark');
+    drawSwatches();
+  }
+  document.querySelector('.theme').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setTheme(b.dataset.t); });
+  $('darkSw').addEventListener('click', () => setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
+
+  function tick() { $('now').innerHTML = `${clock()}<span>${ampm()}</span>`; }
+  tick(); setInterval(tick, 1000);
+  setTheme(matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  drawPlaces(); drawHistory();
+</script>
+</body>
+</html>
