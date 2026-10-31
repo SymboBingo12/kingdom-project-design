@@ -14,6 +14,7 @@ Open these in a browser:
 - [brand/desktop.html](brand/desktop.html): desktop screens
 - [brand/slides.html](brand/slides.html): a 5-slide overview
 - [examples/components/index.html](examples/components/index.html): every component, light and dark
+- [examples/motion/index.html](examples/motion/index.html): how the artwork moves
 
 ## Use it
 
@@ -29,8 +30,23 @@ Open these in a browser:
 | `tokens/` | Colours, fonts, sizes and spacing, light and dark |
 | `guidelines/` | The rules every app follows |
 | `components/` | Buttons, cards, lists, switches, banners, the stage display and more |
-| `motion/` | Animation timing and the reduced-motion rule |
+| `motion/` | Animation timing, artwork motion and the reduced-motion rule |
 | `examples/` | Real screens built with the system |
+
+## Help with it
+
+Changes go through a pull request, so we can look at them together before they reach `main`.
+
+1. Make a branch for your change: `git checkout -b short-name`.
+2. Check it in a browser: light, dark (add `?theme=dark` to the page address) and phone width.
+3. Push the branch and open a pull request. Say what changed and why; a screenshot helps.
+
+A few rules keep the design ours and keep it consistent:
+
+- **Original art only.** Never use JW.ORG or JW Library logos, names, fonts or artwork.
+- **Screenshots of other apps stay on your computer.** Put them in `reference/`, which is never pushed.
+- **Colours and sizes come from `tokens/tokens.css`.** Add a token there rather than a new colour in a component.
+- **Motion follows [motion/motion.md](motion/motion.md),** and every animation respects reduced motion.
 
 ## Status
 
