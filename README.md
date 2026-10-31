@@ -8,7 +8,9 @@ Working name: **Steward**.
 
 ## See it
 
-Open these in a browser:
+Online: **https://symbobingo12.github.io/kingdom-project-design/**
+
+Or open these in a browser:
 
 - [brand/index.html](brand/index.html): the brand guide
 - [brand/desktop.html](brand/desktop.html): desktop screens
